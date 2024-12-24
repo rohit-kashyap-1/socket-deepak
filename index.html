@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Socket.IO chat</title>
+  <style>
+    *{
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      padding-bottom: 3rem;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    #form {
+      background: rgba(0, 0, 0, 0.15);
+      padding: 0.25rem;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      height: 3rem;
+      box-sizing: border-box;
+      backdrop-filter: blur(10px);
+    }
+
+    #name{
+      flex:2
+    }
+    #input{
+      flex:5
+    }
+    input {
+      border: none;
+      padding: 0 1rem;
+      flex-grow: 1;
+      border-radius: 2rem;
+      margin: 0.25rem;
+    }
+
+    input:focus {
+      outline: none;
+    }
+
+    #form>button {
+      background: #333;
+      border: none;
+      padding: 0 1rem;
+      margin: 0.25rem;
+      border-radius: 3px;
+      outline: none;
+      color: #fff;
+    }
+
+    #messages {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    #messages>li {
+      padding: 0.5rem 1rem;
+    }
+
+    #messages>li:nth-child(odd) {
+      background: #efefef;
+    }
+    @media screen and (max-width:768px) {
+      form{
+        display: block !important;
+        padding: 20px !important;
+        height: auto !important;
+      }
+        input{
+          width: 100%;
+          height: 40px;
+          flex:1 !important;
+          margin-bottom: 10px !important;
+        }
+        button{
+          width: 100%;
+          height: 40px;
+        }
+    }
+  </style>
+</head>
+
+<body>
+  <ul id="messages"></ul>
+  <form id="form" action="">
+    <input id="name" autocomplete="off" placeholder="Enter name" width="100" />
+    <input id="input" autocomplete="off" placeholder="Enter message" />
+    <button>Send</button>
+  </form>
+  <script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
+  <script>
+    const socket = io();
+    const form = document.getElementById('form');
+    const input = document.getElementById('input');
+    const name = document.getElementById('name');
+    const messages = document.getElementById("messages")
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault()
+      if (input.value && name.value) {
+        socket.emit('send message', {name:name.value,msg:input.value})
+        input.value = '';
+      }
+    })
+
+    socket.on('send message', (msg) => {
+      if(msg.name==1995){
+      messages.innerHTML +=`<li><img src='ydd.jpg' width='50'>:: ${msg.msg}</li>`
+      }else{
+      messages.innerHTML +=`<li><strong>${msg.name}</strong>:: ${msg.msg}</li>`
+      }
+
+      window.scrollTo(0, document.body.scrollHeight);
+    });
+  </script>
+</body>
+
+</html>
